@@ -14,18 +14,26 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import RequestForm from "./pages/RequestForm";
 import MyRequests from "./pages/MyRequests";
+import SupportRequests from "./pages/SupportRequests";
+
+// Protect routes that require login
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return <div className="loading-screen">Loading...</div>;
+  if (loading) {
+    return <div className="loading-screen">Loading...</div>;
+  }
 
   return user ? children : <Navigate to="/" replace />;
 }
 
+// Prevent logged-in users from accessing login/register pages
 function GuestRoute({ children }) {
   const { user, loading } = useAuth();
 
-  if (loading) return <div className="loading-screen">Loading...</div>;
+  if (loading) {
+    return <div className="loading-screen">Loading...</div>;
+  }
 
   return user ? <Navigate to="/dashboard" replace /> : children;
 }
@@ -77,15 +85,29 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
-<Route
-  path="/my-requests"
-  element={
-    <ProtectedRoute>
-      <MyRequests />
-    </ProtectedRoute>
-  }
-/>
-      <Route path="*" element={<Navigate to="/" replace />} />
+
+      <Route
+        path="/my-requests"
+        element={
+          <ProtectedRoute>
+            <MyRequests />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/support-requests"
+        element={
+          <ProtectedRoute>
+            <SupportRequests />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
     </Routes>
   );
 }
